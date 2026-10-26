@@ -68,22 +68,43 @@ export function ProjectCard({ project, sizes, className }: ProjectCardProps) {
             padding, so the click area would be ~16px tall against the 24px
             minimum. mt-auto pins the link to the bottom of equal-height
             cards. */}
-        <Button
-          variant="text-link"
-          asChild
-          className="mt-auto inline-flex items-center gap-1.5 self-start py-2"
-        >
-          <Link
-            href={project.href}
-            variant="unstyled"
-            className="group/link inline-flex items-center gap-1.5"
+        <div className="mt-auto flex flex-wrap items-center gap-4">
+          <Button
+            variant="text-link"
+            asChild
+            className="inline-flex items-center gap-1.5 self-start py-2"
           >
-            {project.linkLabel}
-            <span className="inline-block transition-transform duration-200 ease-out group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5">
-              <Icon icon={ArrowUpRight} />
-            </span>
-          </Link>
-        </Button>
+            <Link
+              href={project.href}
+              variant="unstyled"
+              className="group/link inline-flex items-center gap-1.5"
+            >
+              {project.linkLabel}
+              <span className="inline-block transition-transform duration-200 ease-out group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5">
+                <Icon icon={ArrowUpRight} />
+              </span>
+            </Link>
+          </Button>
+
+          {project.figmaHref && (
+            <Button
+              variant="text-link"
+              asChild
+              className="inline-flex items-center gap-1.5 self-start py-2"
+            >
+              <Link
+                href={project.figmaHref}
+                variant="unstyled"
+                className="group/link inline-flex items-center gap-1.5"
+              >
+                {project.figmaLabel ?? "Desain Figma"}
+                <span className="inline-block transition-transform duration-200 ease-out group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5">
+                  <Icon icon={ArrowUpRight} />
+                </span>
+              </Link>
+            </Button>
+          )}
+        </div>
       </Card>
     </Card3DTilt>
   );

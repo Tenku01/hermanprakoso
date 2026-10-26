@@ -215,6 +215,8 @@ export interface Project {
   readonly stack: readonly string[];
   readonly screenshot: Photo;
   readonly linkLabel: string;
+  readonly figmaHref?: `https://${string}`;
+  readonly figmaLabel?: string;
 }
 
 export interface WorkContent {
