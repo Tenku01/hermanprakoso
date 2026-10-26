@@ -56,7 +56,7 @@ export const SITE = {
   social: [
     { label: "GitHub", href: "https://github.com/Tenku01", icon: "github" },
   ],
-  repoUrl: "https://github.com/Tenku01",
+  repoUrl: "https://github.com/Tenku01/hermanprakoso",
   figmaTemplateUrl:
     "https://www.figma.com/community/file/1262992249991763120/Personal-Portfolio-Website-Template-%7C-Mobile-%26-Desktop",
   skipLinkLabel: "Skip to main content",
