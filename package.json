@@ -1,0 +1,48 @@
+{
+  "name": "hermanpr.dev",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "verify": "tsc --noEmit && eslint . && node --experimental-strip-types scripts/check-tokens.mjs && node scripts/check-anchors.mjs && node --experimental-strip-types scripts/check-duration.mjs && next build",
+    "check:duration": "node --experimental-strip-types scripts/check-duration.mjs",
+    "icons:generate": "node scripts/generate-icons.mjs",
+    "lh:dir": "node -e \"require('node:fs').mkdirSync('.next/lighthouse',{recursive:true})\"",
+    "lh:desktop": "npm run lh:dir && lighthouse http://localhost:3000 --preset=desktop --output=html --output=json --output-path=./.next/lighthouse/desktop --chrome-flags=\"--headless=new\" --quiet",
+    "lh:mobile": "npm run lh:dir && lighthouse http://localhost:3000 --output=html --output=json --output-path=./.next/lighthouse/mobile --chrome-flags=\"--headless=new\" --quiet"
+  },
+  "engines": {
+    "node": ">=22.18"
+  },
+  "dependencies": {
+    "@next/third-parties": "^16.2.12",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.28.0",
+    "next": "16.2.12",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "tailwind-merge": "^3.6.0",
+    "tech-stack-icons": "^3.7.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^20.19.43",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "axe-core": "^4.12.1",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.12",
+    "lighthouse": "^12.8.2",
+    "prettier": "^3.9.6",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "sharp": "^0.34.5",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~5.9.0"
+  }
+}

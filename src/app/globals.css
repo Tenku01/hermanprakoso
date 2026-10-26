@@ -1,0 +1,390 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-display: var(--font-bricolage);
+  --font-sans: var(--font-geist);
+  --font-mono: var(--font-geist-mono);
+}
+
+@theme {
+  --animate-wave: wave 2s linear 3;
+  --animate-sheet-in: sheet-in 300ms cubic-bezier(0.32, 0.72, 0, 1);
+  --animate-sheet-out: sheet-out 200ms ease-in;
+  --animate-fade-in: fade-in 200ms ease-out;
+  --animate-fade-out: fade-out 150ms ease-in;
+  --animate-marquee: marquee 32s linear infinite;
+  --animate-terminal-blink: terminal-blink 1.2s step-end infinite;
+  --animate-icon-pop: icon-pop 250ms ease-out;
+}
+
+@keyframes wave {
+  0% {
+    rotate: 0deg;
+  }
+  15% {
+    rotate: 14deg;
+  }
+  30% {
+    rotate: -8deg;
+  }
+  45% {
+    rotate: 14deg;
+  }
+  60% {
+    rotate: -4deg;
+  }
+  75% {
+    rotate: 10deg;
+  }
+  100% {
+    rotate: 0deg;
+  }
+}
+
+@keyframes sheet-in {
+  from {
+    translate: 0 100%;
+  }
+  to {
+    translate: 0 0;
+  }
+}
+
+@keyframes sheet-out {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 0 100%;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes marquee {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: -50% 0;
+  }
+}
+
+/* step-end, not a fade: the hard on/off is what reads as a terminal cursor. */
+@keyframes terminal-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Copy-button feedback: the checkmark overshoots to 1.15 before settling — a
+   plain scale-to-1 reads as a fade, not a confirmation. */
+@keyframes icon-pop {
+  from {
+    transform: scale(0.55);
+    opacity: 0.4;
+  }
+  60% {
+    transform: scale(1.15);
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* The wrist, not the geometric centre. Arbitrary values are banned project-wide,
+   so this cannot be expressed as an `origin-[70%_70%]` bracket class. */
+@utility wave-origin {
+  transform-origin: 70% 70%;
+}
+
+/* Typewriter reveal for the hero terminal. TerminalFrame sets three inline
+   custom properties on each <li> (--typewriter-delay, --typewriter-duration,
+   --typewriter-steps); custom properties inherit, so the utilities below read
+   them from any child span. Width is text-length × 1ch — exact only because
+   the terminal is strictly monospace, one code point per cell. The animation
+   shorthand and its delay MUST live in one rule: a later animate-* class's
+   shorthand would reset animation-delay to 0s. Call sites apply all of these
+   behind motion-safe:; reduced-motion users never receive the classes and get
+   the finished card at first paint (the kill-switch below zeroes durations
+   but not delays, and a `both` fill with multi-second delays would otherwise
+   blank the card). If an engine ever rejected steps(var()), timing falls back
+   to `ease` and the reveal degrades to a smooth wipe — text is never lost. */
+/* Explicit `to` + backwards (not both) fill: Geist Mono loads with
+   preload: false, so a fill that persists the end width would freeze a ch
+   value snapshotted against the fallback font and clip the last character(s)
+   after the swap. With backwards fill the span returns to width: auto —
+   intrinsic text width, always correct in whatever font is active. */
+@keyframes typewriter-reveal {
+  from {
+    width: 0;
+  }
+  to {
+    width: calc(var(--typewriter-steps, 24) * 1ch);
+  }
+}
+
+/* Constant keyframes + default fill (none): the caret exists ONLY between its
+   line's start and end; outside that window the base opacity: 0 wins. */
+@keyframes typewriter-caret-on {
+  from,
+  to {
+    opacity: 1;
+  }
+}
+
+@utility typewriter-text {
+  display: inline-block;
+  overflow: hidden;
+  /* An overflow-hidden inline-block baselines at its bottom margin edge;
+     bottom alignment restores exact overlap with the glyph's line box
+     (same font, same line-height). */
+  vertical-align: bottom;
+  /* pre, not nowrap: space runs never collapse, so 1ch × count stays exact. */
+  white-space: pre;
+  max-width: 100%;
+  animation: typewriter-reveal var(--typewriter-duration, 600ms)
+    steps(var(--typewriter-steps, 24), end) backwards;
+  animation-delay: var(--typewriter-delay, 0ms);
+}
+
+/* The ::after bar rides the span's right edge — the moving reveal edge — so
+   it travels with the typing; at width 0 it sits outside the clip box and is
+   hidden by overflow. currentColor inherits each line's tone for free. */
+@utility typewriter-caret {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset-block: 0.125em;
+    right: 0;
+    width: 0.6ch;
+    background-color: currentColor;
+    opacity: 0;
+    animation: typewriter-caret-on var(--typewriter-duration, 600ms) linear;
+    animation-delay: var(--typewriter-delay, 0ms);
+  }
+}
+
+/* 1ms fade-in with `both` fill = hidden until the delay expires, then on —
+   the glyph materializes the instant its line starts typing. */
+@utility typewriter-glyph {
+  animation: fade-in 1ms linear both;
+  animation-delay: var(--typewriter-delay, 0ms);
+}
+
+/* fade-in (1ms, both) holds the cursor invisible until its line finishes
+   typing; the blink, listed later, owns opacity from that moment on. Comma-
+   joined in one utility: twMerge would collapse two animate-* classes. */
+@utility typewriter-cursor {
+  animation:
+    fade-in 1ms linear both,
+    var(--animate-terminal-blink);
+  animation-delay:
+    calc(var(--typewriter-delay, 0ms) + var(--typewriter-duration, 0ms)),
+    calc(var(--typewriter-delay, 0ms) + var(--typewriter-duration, 0ms));
+}
+
+:root {
+  /* Lets `block-size: 0` -> `block-size: auto` animate, which is what makes the
+     FAQ accordion open smoothly instead of snapping. Chromium-only; elsewhere it
+     is inert and the accordion simply snaps. */
+  interpolate-size: allow-keywords;
+}
+
+html {
+  /* 5rem clears the h-16 (64px) sticky header plus breathing room. This is the
+     ONLY scroll-offset mechanism in the project — no section adds its own
+     per-element scroll margin. */
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body:has(dialog[open]) {
+  overflow: hidden;
+}
+
+/* Scroll-spy nav highlight with no scroll listener and no fourth island: each
+   nav section publishes a named view timeline, timeline-scope lifts the names
+   to <body>, and the matching link's label runs a colour animation against
+   them. view-timeline-inset 50% 50% collapses the detection window to the
+   viewport's vertical midline, so a timeline is in range exactly while its
+   band straddles the middle of the screen. Bands stack flush, so at most one
+   link is ever lit — and none is while hero, stack, faq or contact hold the
+   midline: those sections have no nav link, and all-grey there is correct.
+
+   timeline-scope sits on body because the sections live in <main> and the
+   labels in <header> — including inside the mobile dialog, which paints in
+   the top layer but stays a DOM descendant, which is all name scoping needs.
+   It reads as the midline only because no ancestor of the bands is a scroll
+   container: the viewport is every timeline's source.
+
+   Two declarations are load-bearing:
+   - fill stays `none` (the shorthand default). Out of range the label must
+     inherit colour from its anchor — that is what keeps category-tab-hover's
+     ink reaching it — and a `both` fill would pin a keyframe forever once a
+     band scrolled past.
+   - animation-timeline comes AFTER the `animation` shorthand, which resets it
+     to `auto` — the same shorthand trap terminal-stagger-* documents for
+     animation-delay.
+
+   Keyframes are constant on purpose: scroll position gates WHETHER the ink
+   applies, never a blend. A ramp would leave both labels half-grey around
+   every band boundary; the half-open animation phases are what hand off
+   exactly-one-lit at a flush edge.
+
+   Guard shape per PHASE-13 step 11: everything, base declarations included,
+   sits inside the media + supports pair. timeline-scope is the feature tested
+   because it is the weakest-supported piece in play (Chromium 116+, Safari
+   26+, Firefox not yet) — testing animation-timeline alone would admit an
+   engine that cannot scope names and would then light nothing while also
+   skipping the fallback. Browsers failing either gate use the :target
+   fallback below instead.
+
+   Keep every id list in this block in step with NAV.links in
+   src/content/nav.ts.
+
+   The colour exception: this block and the fallback are the one place a text
+   colour is set outside src/design/tokens.ts. It cannot be a token — no
+   className can say "style me by another element's scroll position or
+   :target" — so it reads the theme variable category-tab-hover's ink resolves
+   to. Only the ink is declared; the resting grey is category-tab's own,
+   inherited, so the two can never drift. */
+@media not (prefers-reduced-motion: reduce) {
+  @supports (timeline-scope: --nav-services) {
+    body {
+      timeline-scope:
+        --nav-services,
+        --nav-work,
+        --nav-about,
+        --nav-experience,
+        --nav-testimonials;
+    }
+
+    /* 50% + 50% zeroes the window; the scrubbed range is still the band's own
+       height (top edge reaches the midline -> bottom edge leaves it), so
+       progress is defined for any non-empty band. */
+    #services,
+    #work,
+    #about,
+    #experience,
+    #testimonials {
+      view-timeline-inset: 50% 50%;
+    }
+
+    #services {
+      view-timeline-name: --nav-services;
+    }
+    #work {
+      view-timeline-name: --nav-work;
+    }
+    #about {
+      view-timeline-name: --nav-about;
+    }
+    #experience {
+      view-timeline-name: --nav-experience;
+    }
+    #testimonials {
+      view-timeline-name: --nav-testimonials;
+    }
+
+    @keyframes nav-current {
+      from,
+      to {
+        color: var(--color-neutral-900);
+      }
+    }
+
+    a[href="#services"] .nav-label {
+      animation: nav-current linear;
+      animation-timeline: --nav-services;
+    }
+    a[href="#work"] .nav-label {
+      animation: nav-current linear;
+      animation-timeline: --nav-work;
+    }
+    a[href="#about"] .nav-label {
+      animation: nav-current linear;
+      animation-timeline: --nav-about;
+    }
+    a[href="#experience"] .nav-label {
+      animation: nav-current linear;
+      animation-timeline: --nav-experience;
+    }
+    a[href="#testimonials"] .nav-label {
+      animation: nav-current linear;
+      animation-timeline: --nav-testimonials;
+    }
+  }
+}
+
+/* Fallback: the :target mechanism the scroll-spy replaced, ink-only. It lights
+   on click and on a shared deep link (/#work), not on free scroll — a nav link
+   cannot see its own section without :has() on a common ancestor, which is why
+   this stays one rule per id. It must apply when scroll timelines are missing
+   (Firefox) OR motion is reduced; CSS cannot OR a @supports with a @media, so
+   the same selector list appears twice — keep both copies identical. It must
+   NOT leak into the scroll-spy path: :target is sticky, and after clicking
+   Work then free-scrolling to About a live :target rule would hold Work lit
+   against the spy. */
+@supports not (timeline-scope: --nav-services) {
+  body:has(#services:target) a[href="#services"] .nav-label,
+  body:has(#work:target) a[href="#work"] .nav-label,
+  body:has(#about:target) a[href="#about"] .nav-label,
+  body:has(#experience:target) a[href="#experience"] .nav-label,
+  body:has(#testimonials:target) a[href="#testimonials"] .nav-label {
+    color: var(--color-neutral-900);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body:has(#services:target) a[href="#services"] .nav-label,
+  body:has(#work:target) a[href="#work"] .nav-label,
+  body:has(#about:target) a[href="#about"] .nav-label,
+  body:has(#experience:target) a[href="#experience"] .nav-label,
+  body:has(#testimonials:target) a[href="#testimonials"] .nav-label {
+    color: var(--color-neutral-900);
+  }
+}
+
+::details-content {
+  block-size: 0;
+  overflow: hidden;
+  transition:
+    block-size 0.3s,
+    content-visibility 0.3s allow-discrete;
+}
+
+[open]::details-content {
+  block-size: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* ::details-content is not matched by * — without it the FAQ still slides. */
+  *,
+  *::before,
+  *::after,
+  *::details-content {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
