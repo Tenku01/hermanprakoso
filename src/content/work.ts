@@ -1,5 +1,6 @@
 import akaRentalShot from "@/assets/images/work/akarental.png";
 import healthUiShot from "@/assets/images/work/HealthUI.png";
+import kasTransparansiShot from "@/assets/images/work/kastransparansi.png";
 import pusjianstralitbangShot from "@/assets/images/work/Pusjianstralitbang.png";
 import rthpShot from "@/assets/images/work/RTHP.png";
 import tenderplusShot from "@/assets/images/work/tenderplus.png";
@@ -40,6 +41,29 @@ export const WORK_I18N = {
           alt: "Tampilan antarmuka sistem manajemen reservasi rental mobil PT AKA",
         },
         linkLabel: "Lihat di GitHub",
+      },
+      {
+        id: "website-dusun",
+        name: "Website Dusun",
+        domain: "dusundemangan.vercel.app",
+        href: "https://dusundemangan.vercel.app/",
+        featured: false,
+        description:
+          "Portal layanan publik dan transparansi keuangan kas Dusun Demangan. Memfasilitasi mutasi kas masuk-keluar secara akuntabel, katalog & peminjaman inventaris warga secara mandiri, tracking status pinjaman, serta rekapitulasi iuran listrik dusun.",
+        role: "Full-stack Developer & UI/UX Designer — Menganalisis kebutuhan administrasi desa, merancang antarmuka responsif, membangun portal transparansi kas publik, alur pengajuan & persetujuan peminjaman barang, serta modul pencatatan iuran listrik warga.",
+        stack: [
+          "Laravel",
+          "PHP",
+          "Tailwind CSS",
+          "Alpine.js",
+          "MySQL",
+          "Vercel",
+        ],
+        screenshot: {
+          src: kasTransparansiShot,
+          alt: "Tampilan antarmuka portal layanan dan transparansi kas Dusun Demangan",
+        },
+        linkLabel: "Kunjungi Website",
       },
       {
         id: "tenderplus",
@@ -166,6 +190,29 @@ export const WORK_I18N = {
           alt: "Fleet reservation management system interface for PT AKA",
         },
         linkLabel: "View on GitHub",
+      },
+      {
+        id: "website-dusun",
+        name: "Village Community Website",
+        domain: "dusundemangan.vercel.app",
+        href: "https://dusundemangan.vercel.app/",
+        featured: false,
+        description:
+          "Integrated public service and financial transparency portal for Dusun Demangan. Enables public cash flow accountability, online community inventory borrowing with status tracking, and village utility fee administration.",
+        role: "Full-stack Developer & UI/UX Designer — Analyzed community operational needs, designed responsive UI, implemented public financial ledger, asset loan workflows with admin approval, and utility billing management.",
+        stack: [
+          "Laravel",
+          "PHP",
+          "Tailwind CSS",
+          "Alpine.js",
+          "MySQL",
+          "Vercel",
+        ],
+        screenshot: {
+          src: kasTransparansiShot,
+          alt: "User interface of Dusun Demangan public services and financial transparency portal",
+        },
+        linkLabel: "Visit Website",
       },
       {
         id: "tenderplus",
