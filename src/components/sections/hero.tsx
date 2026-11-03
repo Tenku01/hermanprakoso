@@ -5,6 +5,7 @@ import { MapPin } from "lucide-react";
 import { BrandGitHub } from "@/components/icons/brand/github";
 import { BrandX } from "@/components/icons/brand/x";
 import { Card3DTilt } from "@/components/islands/card-3d-tilt";
+import { EnvelopeCover } from "@/components/islands/envelope-cover";
 import { Avatar } from "@/components/primitives/avatar";
 import { Badge } from "@/components/primitives/badge";
 import { headingId } from "@/components/primitives/band-header";
@@ -38,7 +39,8 @@ export function Hero() {
   }));
 
   return (
-    <Section id="hero" surface="canvas" labelledBy={headingId("hero")}>
+    <EnvelopeCover>
+      <Section id="hero" surface="canvas" labelledBy={headingId("hero")}>
       <Container>
         <div className={tokens.layout["hero-grid"]}>
           <div
@@ -158,5 +160,6 @@ export function Hero() {
         </div>
       </Container>
     </Section>
+    </EnvelopeCover>
   );
 }
