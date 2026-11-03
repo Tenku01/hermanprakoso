@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { MobileNav } from "@/components/islands/mobile-nav";
 import { Button } from "@/components/primitives/button";
 import { Container } from "@/components/primitives/container";
@@ -13,11 +14,28 @@ import { cn } from "@/lib/cn";
 export function SiteHeader() {
   const { lang } = useLanguage();
   const nav = NAV_I18N[lang];
+  const [isCoverOpen, setIsCoverOpen] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      // Reveal header once user has scrolled past envelope opening threshold (~400px)
+      setIsCoverOpen(window.scrollY > 400);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <header
+      style={{
+        transform: isCoverOpen ? "translateY(0)" : "translateY(-100%)",
+        opacity: isCoverOpen ? 1 : 0,
+        transition: "transform 350ms cubic-bezier(0.16, 1, 0.3, 1), opacity 350ms ease",
+        pointerEvents: isCoverOpen ? "auto" : "none",
+      }}
       className={cn(
-        "sticky top-0 z-40 w-full",
+        "fixed top-0 inset-x-0 z-40 w-full",
         tokens.components["top-nav"],
         tokens.overrides["hairline-bottom"],
       )}
