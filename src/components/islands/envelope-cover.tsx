@@ -37,20 +37,20 @@ export function EnvelopeCover({ children }: EnvelopeCoverProps) {
 
   const copy = {
     id: {
-      eyebrow: "HERMAN PRAKOSO // DOSSIER FILE N° 01",
-      title: "Design Portfolio",
+      eyebrow: "HERMAN PRAKOSO // FLEX FILE N° 01",
+      title: "My Portfolio",
       scrollHint: "👇 Scroll down to know me!",
       openBtn: "Open up",
       quote:
-        "Saya saat ini terbuka untuk proyek baru. Hubungi saya jika Anda membutuhkan builder & desainer end-to-end!",
+        "Terbuka untuk pekerjaan kontrak, freelance, atau full-time remote. Hubungi saya lewat email atau WhatsApp untuk diskusi proyek.",
     },
     en: {
-      eyebrow: "HERMAN PRAKOSO // DOSSIER FILE N° 01",
-      title: "Design Portfolio",
+      eyebrow: "HERMAN PRAKOSO // FLEX FILE N° 01",
+      title: "My Portfolio",
       scrollHint: "👇 Scroll down to know me!",
       openBtn: "Open up",
       quote:
-        "I'm currently available for new work, let me know if you need a builder. I'd love to talk about the next big thing!",
+        "Available for contract, freelance, or remote full-time roles. Reach out via email or WhatsApp to discuss your project.",
     },
   }[lang];
 
@@ -112,11 +112,22 @@ export function EnvelopeCover({ children }: EnvelopeCoverProps) {
   // Footer slides DOWN continuously: 0 -> +115%
   const footerTranslateY = progress * 115;
 
-  // String unhooks, stretches, and fades out within the first 25% of travel
-  const stringProgress = Math.min(progress / 0.25, 1);
-  const stringOpacity = Math.max(0, 1 - stringProgress * 1.6);
-  const stringScaleY = reducedMotion ? 1 : 1 + stringProgress * 2.5;
-  const stringRotate = reducedMotion ? 0 : stringProgress * 28;
+  // String unhooking physics:
+  // Phase 1 (0 -> 0.06): Taut stretch between buttons
+  // Phase 2 (0.06 -> 0.20): Loop unhooks from bottom button, flicks loose and swings
+  // Phase 3 (0.20 -> 0.30): Loose dangling tail dissolves as flap ascends
+  const isUnhooking = progress >= 0.06;
+  const unhookPhase = Math.min(Math.max((progress - 0.06) / 0.14, 0), 1);
+
+  const stringScaleY = reducedMotion
+    ? 1
+    : isUnhooking
+      ? 1.25 - unhookPhase * 0.2
+      : 1 + (progress / 0.06) * 0.25;
+
+  const stringRotate = reducedMotion ? 0 : isUnhooking ? unhookPhase * 42 : 0;
+  const stringTranslateX = reducedMotion ? 0 : isUnhooking ? unhookPhase * 20 : 0;
+  const stringOpacity = Math.max(0, 1 - Math.max(0, progress - 0.16) * 7.5);
 
   // Underneath Hero content reveals smoothly as cover parts open
   const contentTranslateY = (1 - progress) * 20;
@@ -124,7 +135,6 @@ export function EnvelopeCover({ children }: EnvelopeCoverProps) {
   const contentOpacity = Math.min(1, Math.max(0, (progress - 0.02) * 1.5));
 
   const isFullyOpen = progress >= 0.99;
-  const isPartiallyOpen = progress >= 0.85;
 
   return (
     <div
@@ -147,13 +157,12 @@ export function EnvelopeCover({ children }: EnvelopeCoverProps) {
           {children}
         </div>
 
-        {/* Layer 2: The Top Envelope Flap Cover Sheet */}
+        {/* Layer 2: The Top Envelope Flap Cover Sheet (z-30 so it sits above footer z-20) */}
         <div
           aria-hidden={isFullyOpen}
-          className="absolute inset-x-0 top-0 flex flex-col items-center justify-center will-change-transform"
+          className="absolute inset-x-0 top-0 flex flex-col items-center justify-start will-change-transform pt-8 sm:pt-12 z-30"
           style={{
             height: "60vh",
-            zIndex: isPartiallyOpen ? 25 : 50,
             transform: `translate3d(0, -${flapTranslateY}%, 0)`,
             borderBottomLeftRadius: "clamp(48px, 8vw, 99px)",
             borderBottomRightRadius: "clamp(48px, 8vw, 99px)",
@@ -174,19 +183,19 @@ export function EnvelopeCover({ children }: EnvelopeCoverProps) {
               {copy.eyebrow}
             </p>
 
-            {/* Big Headline (Design Portfolio) */}
+            {/* Big Headline (My Portfolio) */}
             <h1
               className="font-serif font-black tracking-tight text-neutral-900"
               style={{
-                fontSize: "clamp(34px, 7vw, 88px)",
-                lineHeight: 1.05,
+                fontSize: "clamp(38px, 6.5vw, 84px)",
+                lineHeight: 1.1,
               }}
             >
               {copy.title}
             </h1>
 
-            {/* Tilted Interactive Stickers Area */}
-            <div className="relative mt-3 sm:mt-5 flex flex-col items-center gap-2">
+            {/* Tilted Interactive Stickers Area (Comfortably above the pin) */}
+            <div className="relative mt-3 sm:mt-4 flex flex-col items-center gap-2">
               {/* Sticker 1: Scroll Hint (Yellow/Lime Tag, -3deg tilt) */}
               <div
                 className="inline-flex items-center gap-2 rounded px-3.5 py-1.5 sm:px-4 sm:py-2 font-sans font-bold text-neutral-950 shadow-md select-none"
@@ -195,7 +204,7 @@ export function EnvelopeCover({ children }: EnvelopeCoverProps) {
                   transform: "rotate(-3deg)",
                 }}
               >
-                <span className="text-xs sm:text-base">{copy.scrollHint}</span>
+                <span className="text-xs sm:text-sm">{copy.scrollHint}</span>
               </div>
 
               {/* Sticker 2: Clickable Open Up Tag (Dark Tag, +3deg tilt) */}
@@ -209,65 +218,93 @@ export function EnvelopeCover({ children }: EnvelopeCoverProps) {
                 }}
                 aria-label="Open portfolio dossier"
               >
-                <span className="text-sm sm:text-lg">{copy.openBtn}</span>
+                <span className="text-sm sm:text-base">{copy.openBtn}</span>
               </button>
             </div>
           </div>
 
-          {/* Top Fastener Grommet & String Tie on Bottom Edge of Flap */}
+          {/* Top Fastener Grommet & String Tie (Anchored at the bottom edge of flap) */}
           <div
             onClick={handleOpenClick}
-            className="cursor-pointer absolute left-1/2 -translate-x-1/2 flex flex-col items-center z-40 transition-transform hover:scale-110 active:scale-95"
+            className="cursor-pointer absolute left-1/2 -translate-x-1/2 flex flex-col items-center z-40 transition-transform hover:scale-105 active:scale-95"
             style={{
-              bottom: "16px",
+              bottom: "-26px",
             }}
             title="Click to open"
           >
             {/* Top Circular Button Grommet */}
             <div
-              className="relative size-12 sm:size-14 rounded-full border-2 shadow-lg flex items-center justify-center"
+              className="relative size-13 sm:size-14 rounded-full border-2 shadow-lg flex items-center justify-center"
               style={{
                 backgroundColor: "rgb(208, 229, 56)",
                 borderColor: "rgb(180, 205, 40)",
               }}
             >
               <span
-                className="size-3.5 sm:size-4 rounded-full shadow-inner"
+                className="size-3.5 sm:size-4 rounded-full shadow-inner z-10"
                 style={{ backgroundColor: "rgb(23, 23, 23)" }}
               />
             </div>
 
-            {/* Connecting Vertical String / Thread (originates from top button) */}
+            {/* Connecting Vertical String Tie (Originates from center of top grommet) */}
             <div
               aria-hidden="true"
-              className="pointer-events-none origin-top flex flex-col items-center will-change-transform"
+              className="pointer-events-none origin-top flex flex-col items-center will-change-transform absolute left-1/2 -translate-x-1/2"
               style={{
+                top: "26px", // Aligned with the center of the 52px top grommet
                 opacity: stringOpacity,
-                transform: `scaleY(${stringScaleY}) rotate(${stringRotate}deg)`,
-                height: "56px",
+                transform: `scaleY(${stringScaleY}) rotate(${stringRotate}deg) translateX(${stringTranslateX}px)`,
               }}
             >
-              <div className="flex items-center gap-1.5 h-full py-0.5">
-                <span
-                  className="w-1 h-full rounded-full"
-                  style={{ backgroundColor: "rgb(208, 229, 56)" }}
+              <svg
+                width="36"
+                height="80"
+                viewBox="0 0 36 80"
+                fill="none"
+                className="overflow-visible"
+              >
+                {/* Two parallel cords running on either side of the center hole down to bottom button */}
+                <line
+                  x1="10"
+                  y1="0"
+                  x2="10"
+                  y2="64"
+                  stroke="rgb(208, 229, 56)"
+                  strokeWidth="3.5"
+                  strokeLinecap="round"
                 />
-                <span
-                  className="w-1 h-full rounded-full"
-                  style={{ backgroundColor: "rgb(208, 229, 56)" }}
+                <line
+                  x1="26"
+                  y1="0"
+                  x2="26"
+                  y2="64"
+                  stroke="rgb(208, 229, 56)"
+                  strokeWidth="3.5"
+                  strokeLinecap="round"
                 />
-              </div>
+                {/* Bottom loop wrapped under bottom button - uncurls and snaps free during scroll */}
+                <path
+                  d={
+                    isUnhooking
+                      ? "M 10 56 C 12 70, 28 66, 38 48"
+                      : "M 10 64 C 10 76, 26 76, 26 64"
+                  }
+                  stroke="rgb(208, 229, 56)"
+                  strokeWidth="3.5"
+                  strokeLinecap="round"
+                  fill="none"
+                />
+              </svg>
             </div>
           </div>
         </div>
 
-        {/* Layer 3: The Bottom Dark Footer Surface */}
+        {/* Layer 3: The Bottom Dark Footer Surface (z-20) */}
         <div
           aria-hidden={isFullyOpen}
-          className="absolute inset-x-0 bottom-0 flex flex-col justify-between px-6 sm:px-12 py-8 will-change-transform text-white select-none"
+          className="absolute inset-x-0 bottom-0 flex flex-col justify-between px-6 sm:px-12 py-8 will-change-transform text-white select-none z-20"
           style={{
             height: "40vh",
-            zIndex: isPartiallyOpen ? 20 : 50,
             transform: `translate3d(0, ${footerTranslateY}%, 0)`,
             backgroundColor: "rgb(10, 10, 10)",
             visibility: isFullyOpen ? "hidden" : "visible",
@@ -276,27 +313,27 @@ export function EnvelopeCover({ children }: EnvelopeCoverProps) {
         >
           {/* Bottom Fastener Grommet (Anchored on top of footer surface) */}
           <div
-            className="pointer-events-none absolute left-1/2 -translate-x-1/2 flex flex-col items-center z-30"
+            className="pointer-events-none absolute left-1/2 -translate-x-1/2 flex flex-col items-center z-25"
             style={{
-              top: "24px",
+              top: "38px",
             }}
           >
             <div
-              className="relative size-12 sm:size-14 rounded-full border-2 shadow-lg flex items-center justify-center"
+              className="relative size-13 sm:size-14 rounded-full border-2 shadow-lg flex items-center justify-center"
               style={{
                 backgroundColor: "rgb(208, 229, 56)",
                 borderColor: "rgb(180, 205, 40)",
               }}
             >
               <span
-                className="size-3.5 sm:size-4 rounded-full shadow-inner"
+                className="size-3.5 sm:size-4 rounded-full shadow-inner z-10"
                 style={{ backgroundColor: "rgb(23, 23, 23)" }}
               />
             </div>
           </div>
 
           {/* Spacer to push content below the grommet */}
-          <div className="h-10 sm:h-12" />
+          <div className="h-12 sm:h-16" />
 
           {/* Footer Information Grid (matches reference) */}
           <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 max-w-6xl mx-auto w-full">
@@ -332,7 +369,7 @@ export function EnvelopeCover({ children }: EnvelopeCoverProps) {
               </a>
             </div>
 
-            {/* Right Column: Availability Quote */}
+            {/* Right Column: Availability Quote (Clean, Grounded, Human) */}
             <div className="flex flex-col justify-end max-w-md sm:text-right">
               <p className="font-sans text-sm sm:text-base text-neutral-300 leading-relaxed">
                 {copy.quote}
