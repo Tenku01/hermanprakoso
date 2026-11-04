@@ -6,7 +6,6 @@ import { BrandGitHub } from "@/components/icons/brand/github";
 import { BrandX } from "@/components/icons/brand/x";
 import { Card3DTilt } from "@/components/islands/card-3d-tilt";
 import { EnvelopeCover } from "@/components/islands/envelope-cover";
-import { HangingPendulums } from "@/components/islands/hanging-pendulums";
 import { Avatar } from "@/components/primitives/avatar";
 import { Badge } from "@/components/primitives/badge";
 import { headingId } from "@/components/primitives/band-header";
@@ -41,14 +40,8 @@ export function Hero() {
 
   return (
     <EnvelopeCover>
-      <Section
-        id="hero"
-        surface="canvas"
-        labelledBy={headingId("hero")}
-        className="relative overflow-hidden"
-      >
-
-        <Container>
+      <Section id="hero" surface="canvas" labelledBy={headingId("hero")}>
+      <Container>
         <div className={tokens.layout["hero-grid"]}>
           <div
             className={cn(
@@ -166,7 +159,6 @@ export function Hero() {
           </div>
         </div>
       </Container>
-      <HangingPendulums />
     </Section>
     </EnvelopeCover>
   );

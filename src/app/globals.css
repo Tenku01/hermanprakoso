@@ -428,15 +428,3 @@ body:has(dialog[open]) {
     scroll-behavior: auto !important;
   }
 }
-
-/* Professional & Playful Custom Cursor: hides system cursor only on fine-pointer devices */
-@media (hover: hover) and (pointer: fine) {
-  html.has-custom-cursor,
-  html.has-custom-cursor * {
-    cursor: none !important;
-  }
-  html.has-custom-cursor input,
-  html.has-custom-cursor textarea {
-    cursor: text !important;
-  }
-}
