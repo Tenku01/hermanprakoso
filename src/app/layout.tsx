@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata, Viewport } from "next";
 
+import { CustomCursor } from "@/components/islands/custom-cursor";
 import { SkipLink } from "@/components/primitives/skip-link";
 import { SiteFooter } from "@/components/sections/site-footer";
 import { SiteHeader } from "@/components/sections/site-header";
@@ -68,6 +69,7 @@ export default function RootLayout({
     >
       <body className="flex min-h-full flex-col bg-white font-sans text-gray-700">
         <LanguageProvider>
+          <CustomCursor />
           <SkipLink />
           <SiteHeader />
           <main id="main" tabIndex={-1} className="flex-1">
