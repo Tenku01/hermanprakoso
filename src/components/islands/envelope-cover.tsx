@@ -348,12 +348,20 @@ export function EnvelopeCover({ children }: EnvelopeCoverProps) {
                 GitHub
               </a>
               <a
-                href="https://linkedin.com/in/herman-prakoso"
+                href={SITE.social.find((s) => s.icon === "linkedin")?.href || "https://www.linkedin.com/in/hermanprakoso"}
                 target="_blank"
                 rel="noreferrer noopener"
                 className="text-neutral-300 hover:text-white transition-colors cursor-pointer"
               >
                 LinkedIn
+              </a>
+              <a
+                href={SITE.social.find((s) => s.icon === "instagram")?.href || "https://www.instagram.com/hermanpr._/"}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="text-neutral-300 hover:text-white transition-colors cursor-pointer"
+              >
+                Instagram
               </a>
               <a
                 href={SITE.emailHref}

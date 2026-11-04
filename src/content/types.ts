@@ -48,7 +48,7 @@ export interface BandHeaderContent {
   readonly subhead?: string;
 }
 
-export type BrandIconName = "github" | "x";
+export type BrandIconName = "github" | "x" | "linkedin" | "instagram";
 
 export interface SocialLink {
   readonly label: string;

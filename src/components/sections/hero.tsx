@@ -3,6 +3,8 @@
 import { MapPin } from "lucide-react";
 
 import { BrandGitHub } from "@/components/icons/brand/github";
+import { BrandInstagram } from "@/components/icons/brand/instagram";
+import { BrandLinkedIn } from "@/components/icons/brand/linkedin";
 import { BrandX } from "@/components/icons/brand/x";
 import { Card3DTilt } from "@/components/islands/card-3d-tilt";
 import { EnvelopeCover } from "@/components/islands/envelope-cover";
@@ -26,6 +28,8 @@ import { cn } from "@/lib/cn";
 const GLYPHS = {
   github: BrandGitHub,
   x: BrandX,
+  linkedin: BrandLinkedIn,
+  instagram: BrandInstagram,
 } as const;
 
 export function Hero() {

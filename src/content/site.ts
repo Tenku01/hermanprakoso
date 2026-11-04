@@ -55,6 +55,16 @@ export const SITE = {
   availability: { available: true, label: "Available for work / freelance" },
   social: [
     { label: "GitHub", href: "https://github.com/Tenku01", icon: "github" },
+    {
+      label: "LinkedIn",
+      href: "https://www.linkedin.com/in/hermanprakoso",
+      icon: "linkedin",
+    },
+    {
+      label: "Instagram",
+      href: "https://www.instagram.com/hermanpr._/",
+      icon: "instagram",
+    },
   ],
   repoUrl: "https://github.com/Tenku01/hermanprakoso",
   figmaTemplateUrl:

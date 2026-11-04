@@ -1,6 +1,8 @@
 "use client";
 
 import { BrandGitHub } from "@/components/icons/brand/github";
+import { BrandInstagram } from "@/components/icons/brand/instagram";
+import { BrandLinkedIn } from "@/components/icons/brand/linkedin";
 import { BrandX } from "@/components/icons/brand/x";
 import { Container } from "@/components/primitives/container";
 import { Link } from "@/components/primitives/link";
@@ -20,6 +22,8 @@ const BRAND_GLYPHS: Record<
 > = {
   GitHub: BrandGitHub,
   X: BrandX,
+  LinkedIn: BrandLinkedIn,
+  Instagram: BrandInstagram,
 };
 
 const ROW_CLASS = cn(

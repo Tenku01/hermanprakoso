@@ -27,6 +27,14 @@ export const FOOTER_I18N = {
           { label: "Email", href: "mailto:herman.prakoso33@gmail.com" },
           { label: "WhatsApp", href: "https://wa.me/6289673647187" },
           { label: "GitHub", href: "https://github.com/Tenku01" },
+          {
+            label: "LinkedIn",
+            href: "https://www.linkedin.com/in/hermanprakoso",
+          },
+          {
+            label: "Instagram",
+            href: "https://www.instagram.com/hermanpr._/",
+          },
         ],
       },
       {
@@ -79,6 +87,14 @@ export const FOOTER_I18N = {
           { label: "Email", href: "mailto:herman.prakoso33@gmail.com" },
           { label: "WhatsApp", href: "https://wa.me/6289673647187" },
           { label: "GitHub", href: "https://github.com/Tenku01" },
+          {
+            label: "LinkedIn",
+            href: "https://www.linkedin.com/in/hermanprakoso",
+          },
+          {
+            label: "Instagram",
+            href: "https://www.instagram.com/hermanpr._/",
+          },
         ],
       },
       {
